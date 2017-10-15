@@ -5,12 +5,18 @@ PORT = 6544
 
 def enviarER(s, codigo):
     s.sendall( (ER-{}.format(codigo)).encode("ascii"))
+
 def enviarOK(s, parm = ""):
     s.sendall ( (OK+{}.format(parm)).encode("ascii"))
 
+def splitComd(mens):
+    cmd = mens[:4]
+    params = mens[5:]
+    return cmd, params
+
 def interpComando(comd, parm=""):
     if comd == comandos.GATE:
-        idEmb = param[0:5]
+        idEmb = param[:5]
         porNivel= param[6:]
         if len(porNivel)!= 3:
             enviarER(s, 4)
