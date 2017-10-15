@@ -24,6 +24,21 @@ def interpComando(comd, parm=""):
         print(("Cambiado el nivel del embalse {} a {}").format(idEmb, porNivel))
         enviarOK(s)
         return
+    if comd == comandos.STAT:
+
+        //TODO
+
+
+    if comd == comandos.NAME:
+
+        //TODO
+
+
+    if comd == comandos.LEVE:
+
+        //TODO
+
+
 
 
 
