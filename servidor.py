@@ -82,3 +82,7 @@ if __name__ == "__main__":
             interpComando(cmd, params)
             s.close()
             exit(0)
+
+
+
+    s.close()
