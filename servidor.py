@@ -2,6 +2,7 @@
 import socket, sys, os
 import comandos.py
 PORT = 6544
+MAX_BUF = 1024
 
 def enviarER(s, codigo):
     s.sendall( (ER-{}.format(codigo)).encode("ascii"))
@@ -38,6 +39,8 @@ def interpComando(comd, parm=""):
 
         //TODO
 
+    enviarER(s, 1)
+
 
 
 
@@ -47,3 +50,12 @@ if __name__ == "__main__":
 
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.bind(("", PORT))
+
+    signal.signal(signal.SIGCHLD, signal.SIG_IGN)
+
+    while True:
+        mens, dir_cli = s.recvfrom(MAX_BUF)
+        if not os.fork():
+            s.connect(dir_cli)
+            cmd, params = splitComd(mens)
+            interpComando(cmd, params)
