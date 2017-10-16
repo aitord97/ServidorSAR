@@ -14,9 +14,17 @@ def splitComd(mens):
     cmd = mens[:4]
     params = mens[5:]
     return cmd, params
+def getEmbalse(idEmb):
+    for i in Embalses.Embalses.listaEmbalses:
+        if i[0] == idEmb:
+            idEmbalse = i[0]
+            nomEmbalse = i[1]
+            lvlEmbalse = i[2]
+            return idEmbalse, nomEmbalse, lvlEmbalse
+    return "0", "", 0
 
 def interpComando(comd, parm=""):
-    if comd == comandos.GATE:
+    if comd == comandos.Command.GATE:
         idEmb = param[:5]
         porNivel= param[6:]
         if len(porNivel)!= 3:
@@ -25,17 +33,29 @@ def interpComando(comd, parm=""):
         print(("Cambiado el nivel del embalse {} a {}").format(idEmb, porNivel))
         enviarOK(s)
         return
-    if comd == comandos.STAT:
+    if comd == comandos.Command.STAT:
+        idEmb = param
+        if len(idEmb)==0:
+            enviarER(s, 3)
+            return
+        if len(idEmb)!=5:
+            enviarER(s, 4)
+            return
+        idEmbalse, _, nivelEmbalse = getEmbalse(idEmb)
+        if idEmbalse == "0":
+            enviarER(s, 11)
+            return
+        enviarOK(s, nivelEmbalse)
+        return
+
+
+
+    if comd == comandos.Command.NAME:
 
         //TODO
 
 
-    if comd == comandos.NAME:
-
-        //TODO
-
-
-    if comd == comandos.LEVE:
+    if comd == comandos.Command.LEVE:
 
         //TODO
 
@@ -59,3 +79,5 @@ if __name__ == "__main__":
             s.connect(dir_cli)
             cmd, params = splitComd(mens)
             interpComando(cmd, params)
+            s.close()
+            exit(0)
