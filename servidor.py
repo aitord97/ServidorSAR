@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import socket, sys, os, signal
 import comandos
+from multiprocessing import Process, Queue
+
 PORT = 6544
 MAX_BUF = 1024
 listaEmbalses=[["GI317", "Urkulu", 000],["NA071", "Yesa", 000],["HU119", "Mediana", 000]]
