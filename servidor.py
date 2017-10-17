@@ -4,6 +4,8 @@ import comandos.py
 import Embalses.py
 PORT = 6544
 MAX_BUF = 1024
+listaEmbalses=[["GI317", "Urkulu", 000],["NA071", "Yesa", 000],["HU119", "Mediana", 000]]
+
 
 def enviarER(s, codigo):
     s.sendall( ("ER-{}".format(codigo)).encode("ascii"))
@@ -22,17 +24,17 @@ def splitComd(mens):
     params = mens[5:]
     return cmd, params
 def getEmbalse(idEmb):
-    for i in Embalses.Embalses.listaEmbalses:
+    for i in listaEmbalses:
         if i[0] == idEmb:
             idEmbalse = i[0]
             nomEmbalse = i[1]
             lvlEmbalse = i[2]
             return idEmbalse, nomEmbalse, lvlEmbalse
     return "0", "", 0
-def getListaEmbalses():
-    lista = Embalses.Embalses.listaEmbalses
+def formatListaEmbalses():
+
     mens=b""
-    for i in lista:
+    for i in listaEmbalses:
         mens +=i[0].encode("ascii")
         mens +=i[1].encode()
         mens +=":".encode("ascii")
@@ -44,6 +46,10 @@ def interpComando(comd, parm=""):
         if len(porNivel)!= 3:
             enviarER(s, 4)
             return
+        for i in listaEmbalses:
+            if i[0]==idEmb:
+                i[2]=porNivel
+                break
         print(("Cambiado la apertura del embalse {} a {}").format(idEmb, porNivel))
         enviarOK(s)
         return
@@ -63,13 +69,15 @@ def interpComando(comd, parm=""):
         return
 
     if comd == comandos.Command.NAME:
-        lista = getListaEmbalses
+        lista = formatListaEmbalses()
         enviarOKSinC(s, lista)
         return
 
     if comd == comandos.Command.LEVE:
-
-        //TODO
+        mens=""
+        for i in listaEmbalses:
+            mens += i[2]
+        enviarOK(s, mens)
 
     enviarER(s, 1)
 
@@ -89,7 +97,7 @@ if __name__ == "__main__":
         mens, dir_cli = s.recvfrom(MAX_BUF)
         if not os.fork():
             s.connect(dir_cli)
-            cmd, params = splitComd(mens)
+            cmd, params = splitComd(mens.decode("ascii"))
             interpComando(cmd, params)
             s.close()
             exit(0)
