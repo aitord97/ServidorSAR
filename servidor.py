@@ -6,10 +6,16 @@ PORT = 6544
 MAX_BUF = 1024
 
 def enviarER(s, codigo):
-    s.sendall( (ER-{}.format(codigo)).encode("ascii"))
+    s.sendall( ("ER-{}".format(codigo)).encode("ascii"))
+    return
 
 def enviarOK(s, parm = ""):
-    s.sendall ( (OK+{}.format(parm)).encode("ascii"))
+    s.sendall ( ("OK+{}".format(parm)).encode("ascii"))
+    return
+
+def enviarOKSinC(s, param = ""):
+    s.sendall ("OK+{}".format(param))
+    return
 
 def splitComd(mens):
     cmd = mens[:4]
@@ -23,6 +29,13 @@ def getEmbalse(idEmb):
             lvlEmbalse = i[2]
             return idEmbalse, nomEmbalse, lvlEmbalse
     return "0", "", 0
+def getListaEmbalses():
+    lista = Embalses.Embalses.listaEmbalses
+    mens=b""
+    for i in lista:
+        mens +=i[0].encode("ascii")
+        mens +=i[1].encode()
+        mens +=":".encode("ascii")
 
 def interpComando(comd, parm=""):
     if comd == comandos.Command.GATE:
@@ -31,7 +44,7 @@ def interpComando(comd, parm=""):
         if len(porNivel)!= 3:
             enviarER(s, 4)
             return
-        print(("Cambiado el nivel del embalse {} a {}").format(idEmb, porNivel))
+        print(("Cambiado la apertura del embalse {} a {}").format(idEmb, porNivel))
         enviarOK(s)
         return
     if comd == comandos.Command.STAT:
@@ -49,12 +62,10 @@ def interpComando(comd, parm=""):
         enviarOK(s, nivelEmbalse)
         return
 
-
-
     if comd == comandos.Command.NAME:
-
-        //TODO
-
+        lista = getListaEmbalses
+        enviarOKSinC(s, lista)
+        return
 
     if comd == comandos.Command.LEVE:
 
