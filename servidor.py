@@ -79,8 +79,9 @@ def interpComando(comd, parm=""):
         for i in listaEmbalses:
             mens += i[2]
         enviarOK(s, mens)
-
+        return
     enviarER(s, 1)
+    return
 
 
 
