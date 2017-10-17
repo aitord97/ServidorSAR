@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-import socket, sys, os
-import comandos.py
-import Embalses.py
+import socket, sys, os, signal
+import comandos
 PORT = 6544
 MAX_BUF = 1024
 listaEmbalses=[["GI317", "Urkulu", 000],["NA071", "Yesa", 000],["HU119", "Mediana", 000]]
@@ -23,6 +22,7 @@ def splitComd(mens):
     cmd = mens[:4]
     params = mens[5:]
     return cmd, params
+
 def getEmbalse(idEmb):
     for i in listaEmbalses:
         if i[0] == idEmb:
@@ -31,6 +31,7 @@ def getEmbalse(idEmb):
             lvlEmbalse = i[2]
             return idEmbalse, nomEmbalse, lvlEmbalse
     return "0", "", 0
+
 def formatListaEmbalses():
 
     mens=b""
