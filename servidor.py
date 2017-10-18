@@ -43,6 +43,8 @@ def formatListaEmbalses():
         mens +=":".encode("ascii")
 
 def interpComando(comd, parm=""):
+    os.close(pipe_out)
+    pipe_in = os.fdopen(pipe_in, 'w')
     if comd == comandos.Command.GATE:
         idEmb = param[:5]
         porNivel= param[6:]
@@ -54,6 +56,8 @@ def interpComando(comd, parm=""):
                 i[2]=porNivel
                 break
         print(("Cambiado la apertura del embalse {} a {}").format(idEmb, porNivel))
+        pipe_in.write(listaEmbalses)
+        pipe_in.close()
         enviarOK(s)
         return
     if comd == comandos.Command.STAT:
@@ -96,6 +100,7 @@ if __name__ == "__main__":
     s.bind(("", PORT))
 
     signal.signal(signal.SIGCHLD, signal.SIG_IGN)
+    pipe_in, pipe_out = os.pipe()
 
     while True:
         mens, dir_cli = s.recvfrom(MAX_BUF)
@@ -105,6 +110,12 @@ if __name__ == "__main__":
             interpComando(cmd, params)
             s.close()
             exit(0)
+
+        if cmd == "GATE":
+            os.close(pipe_in)
+            pipe_out = os.fdopen(pipe_out)
+            listaEmbalses=pipe_out.read()
+
 
 
 
