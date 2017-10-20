@@ -35,7 +35,6 @@ def getEmbalse(idEmb):
     return "0", "", 0
 
 def formatListaEmbalses():
-
     mens=b""
     for i in listaEmbalses:
         mens +=i[0].encode("ascii")
@@ -60,6 +59,7 @@ def interpComando(comd, parm=""):
         pipe_in.close()
         enviarOK(s)
         return
+    
     if comd == comandos.Command.STAT:
         idEmb = param
         if len(idEmb)==0:
