@@ -17,7 +17,7 @@ def enviarOK(s, parm = ""):
     return
 
 def enviarOKSinC(s, param = ""):
-    s.sendall ("OK+{}".format(param))
+    s.sendall ("OK+".encode("ascii")+param)
     return
 
 def splitComd(mens):
@@ -59,7 +59,7 @@ def interpComando(comd, parm=""):
         pipe_in.close()
         enviarOK(s)
         return
-    
+
     if comd == comandos.Command.STAT:
         idEmb = param
         if len(idEmb)==0:
@@ -79,7 +79,7 @@ def interpComando(comd, parm=""):
         lista = formatListaEmbalses()
         enviarOKSinC(s, lista)
         return
-    
+
 
     if comd == comandos.Command.LEVE:
         mens=""
