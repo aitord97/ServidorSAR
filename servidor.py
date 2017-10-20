@@ -79,6 +79,7 @@ def interpComando(comd, parm=""):
         lista = formatListaEmbalses()
         enviarOKSinC(s, lista)
         return
+    
 
     if comd == comandos.Command.LEVE:
         mens=""
