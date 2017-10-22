@@ -16,10 +16,6 @@ def enviarOK(s, parm = ""):
     s.sendall ( ("OK+{}".format(parm)).encode("ascii"))
     return
 
-def enviarOKSinC(s, param = ""):
-    s.sendall ("OK+".encode("ascii")+param)
-    return
-
 def splitComd(mens):
     cmd = mens[:4]
     params = mens[5:]
@@ -35,15 +31,16 @@ def getEmbalse(idEmb):
     return "0", "", 0
 
 def formatListaEmbalses():
-    mens=b""
+    mens=""
     for i in listaEmbalses:
-        mens +=i[0].encode("ascii")
-        mens +=i[1].encode()
-        mens +=":".encode("ascii")
+        mens +=i[0]
+        mens +=i[1]
+        mens +=":"
+    mens = mens[:len(mens)-1]
+    return mens
 
 def interpComando(comd, parm=""):
-    os.close(pipe_out)
-    pipe_in = os.fdopen(pipe_in, 'w')
+
     if comd == comandos.Command.GATE:
         idEmb = param[:5]
         porNivel= param[6:]
@@ -77,7 +74,7 @@ def interpComando(comd, parm=""):
 
     if comd == comandos.Command.NAME:
         lista = formatListaEmbalses()
-        enviarOKSinC(s, lista)
+        enviarOK(s, lista)
         return
 
 
@@ -105,17 +102,10 @@ if __name__ == "__main__":
 
     while True:
         mens, dir_cli = s.recvfrom(MAX_BUF)
-        if not os.fork():
-            s.connect(dir_cli)
-            cmd, params = splitComd(mens.decode("ascii"))
-            interpComando(cmd, params)
-            s.close()
-            exit(0)
+        s.connect(dir_cli)
+        cmd, params = splitComd(mens.decode("ascii"))
+        interpComando(cmd, params)
 
-        if cmd == "GATE":
-            os.close(pipe_in)
-            pipe_out = os.fdopen(pipe_out)
-            listaEmbalses=pipe_out.read()
 
 
 
