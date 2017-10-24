@@ -5,7 +5,7 @@ from multiprocessing import Process, Queue
 
 PORT = 6544
 MAX_BUF = 1024
-listaEmbalses=[["GI317", "Urkulu", 000],["NA071", "Yesa", 000],["HU119", "Mediana", 000]]
+listaEmbalses=[["GI317", "Urkulu", 000, 400],["NA071", "Yesa", 000, 500],["HU119", "Mediana", 000, 600]]
 
 
 def enviarER(s, codigo):
@@ -26,8 +26,10 @@ def getEmbalse(idEmb):
         if i[0] == idEmb:
             idEmbalse = i[0]
             nomEmbalse = i[1]
-            lvlEmbalse = i[2]
-            return idEmbalse, nomEmbalse, lvlEmbalse
+            aperEmbalse = i[2]
+            nivlEmbalse = i[3]
+
+            return idEmbalse, nomEmbalse, aperEmbalse, nivlEmbalse
     return "0", "", 0
 
 def formatListaEmbalses():
@@ -63,11 +65,11 @@ def interpComando(comd, param=""):
         if len(idEmb)!=5:
             enviarER(s, 4)
             return
-        idEmbalse, _, nivelEmbalse = getEmbalse(idEmb)
+        idEmbalse, _, nivelEmbalse, _ = getEmbalse(idEmb)
         if idEmbalse == "0":
             enviarER(s, 11)
             return
-        enviarOK(s, nivelEmbalse)
+        enviarOK(s, str(nivelEmbalse))
         return
 
     if comd == comandos.Command.NAME:
@@ -80,11 +82,11 @@ def interpComando(comd, param=""):
         mens=""
         if param == "":
             for i in listaEmbalses:
-                mens += str(i[2])
+                mens += str(i[3])
                 enviarOK(s, mens)
                 return
         else:
-            _,_,mens = getEmbalse(param)
+            _,_,_,mens = getEmbalse(param)
             mens = str(mens)
             enviarOK(s, mens)
             return
