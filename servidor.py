@@ -9,16 +9,16 @@ listaEmbalses=[["GI317", "Urkulu", 000],["NA071", "Yesa", 000],["HU119", "Median
 
 
 def enviarER(s, codigo):
-    s.sendall( ("ER-{}".format(codigo)).encode("ascii"))
+    s.sendall( ("ER-{}".format(codigo)).encode())
     return
 
 def enviarOK(s, parm = ""):
-    s.sendall ( ("OK+{}".format(parm)).encode("ascii"))
+    s.sendall ( ("OK+{}".format(parm)).encode())
     return
 
 def splitComd(mens):
     cmd = mens[:4]
-    params = mens[5:]
+    params = mens[4:]
     return cmd, params
 
 def getEmbalse(idEmb):
@@ -39,11 +39,11 @@ def formatListaEmbalses():
     mens = mens[:len(mens)-1]
     return mens
 
-def interpComando(comd, parm=""):
+def interpComando(comd, param=""):
 
     if comd == comandos.Command.GATE:
         idEmb = param[:5]
-        porNivel= param[6:]
+        porNivel= param[5:]
         if len(porNivel)!= 3:
             enviarER(s, 4)
             return
@@ -52,8 +52,6 @@ def interpComando(comd, parm=""):
                 i[2]=porNivel
                 break
         print(("Cambiado la apertura del embalse {} a {}").format(idEmb, porNivel))
-        pipe_in.write(listaEmbalses)
-        pipe_in.close()
         enviarOK(s)
         return
 
@@ -80,11 +78,17 @@ def interpComando(comd, parm=""):
 
     if comd == comandos.Command.LEVE:
         mens=""
-        for i in listaEmbalses:
-            mens += i[2]
-        enviarOK(s, mens)
-        return
-    enviarER(s, 1)
+        if param == "":
+            for i in listaEmbalses:
+                mens += str(i[2])
+                enviarOK(s, mens)
+                return
+        else:
+            _,_,mens = getEmbalse(param)
+            mens = str(mens)
+            enviarOK(s, mens)
+            return
+        enviarER(s, 1)
     return
 
 
@@ -94,17 +98,20 @@ def interpComando(comd, parm=""):
 
 if __name__ == "__main__":
 
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind(("", PORT))
 
-    signal.signal(signal.SIGCHLD, signal.SIG_IGN)
-    pipe_in, pipe_out = os.pipe()
+
 
     while True:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.bind(("", PORT))
         mens, dir_cli = s.recvfrom(MAX_BUF)
         s.connect(dir_cli)
-        cmd, params = splitComd(mens.decode("ascii"))
+        print("Conectado con " , dir_cli)
+        cmd, params = splitComd(mens.decode())
+        print("Comando: ",cmd)
+        print("Parametros: ",params)
         interpComando(cmd, params)
+        s.close()
 
 
 
