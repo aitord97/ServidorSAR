@@ -83,8 +83,8 @@ def interpComando(comd, param=""):
         if param == "":
             for i in listaEmbalses:
                 mens += str(i[3])
-                enviarOK(s, mens)
-                return
+            enviarOK(s, mens)
+            return
         else:
             _,_,_,mens = getEmbalse(param)
             mens = str(mens)
