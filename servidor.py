@@ -66,7 +66,7 @@ def interpComando(comd, param=""):
         esta = False
         idEmb = param[:5]
         porNivel= param[5:]
-        
+
         if param =="":
             enviarER(s,3)
             return
@@ -116,9 +116,9 @@ def interpComando(comd, param=""):
         enviarOK(s, lista)
         return
 
-""" Devuelve el nivel de llenado del embalse indicado,
-    sino se indica el embalse se envia una lista con todos los porcentajes,
-    si surge algún problema envia el error 14 """
+    """ Devuelve el nivel de llenado del embalse indicado,
+        sino se indica el embalse se envia una lista con todos los porcentajes,
+        si surge algún problema envia el error 14 """
 
     if comd == comandos.Command.LEVE:
         mens=""
