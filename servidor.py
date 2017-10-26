@@ -64,12 +64,12 @@ def interpComando(comd, param=""):
 
     if comd == comandos.Command.GATE:
         esta = False
-        idEmb = param[:5]
-        porNivel= param[5:]
-
         if param =="":
             enviarER(s,3)
             return
+
+        idEmb = param[:5]
+        porNivel= param[5:]
         if len(porNivel)!= 3:
             enviarER(s, 4)
             return
