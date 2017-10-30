@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import socket, sys, os, signal
 import comandos
-from multiprocessing import Process, Queue
 
 PORT = 6544
 MAX_BUF = 1024
